@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Booking;
+use App\Models\Ruko;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class BookingController extends Controller
+{
+    // User endpoints
+    public function store(Request $request)
+    {
+        $request->validate([
+            'ruko_id' => 'required|exists:ruko,ruko_id',
+            'duration_months' => 'required|integer|min:1',
+            'usage_plan' => 'required|string',
+            'ktp_proof' => 'required|file|mimes:pdf,jpeg,png,jpg|max:5120',
+            'transfer_proof' => 'required|file|mimes:pdf,jpeg,png,jpg|max:5120',
+        ]);
+
+        $ktpPath = $request->file('ktp_proof')->store('ktp', 'public');
+        $transferPath = $request->file('transfer_proof')->store('transfer_proofs', 'public');
+
+        Booking::create([
+            'user_id' => Auth::id(),
+            'ruko_id' => $request->ruko_id,
+            'duration_months' => $request->duration_months,
+            'usage_plan' => $request->usage_plan,
+            'ktp_proof' => $ktpPath,
+            'transfer_proof' => $transferPath,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Pengajuan sewa berhasil dikirim dan sedang menunggu validasi admin.');
+    }
+
+    public function userDashboard()
+    {
+        $bookings = Booking::where('user_id', Auth::id())->with('ruko')->orderBy('created_at', 'desc')->get();
+        return view('user.dashboard', compact('bookings'));
+    }
+
+    // Admin endpoints
+    public function adminIndex()
+    {
+        $bookings = Booking::with(['user', 'ruko'])->orderBy('created_at', 'desc')->get();
+        return view('admin.bookings.index', compact('bookings'));
+    }
+
+    public function updateStatus(Request $request, Booking $booking)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,rejected',
+        ]);
+
+        $booking->update(['status' => $request->status]);
+
+        if ($request->status === 'approved') {
+            $booking->ruko->update(['status' => 'rented']);
+        }
+
+        return redirect()->route('admin.bookings.index')->with('success', 'Status pemesanan berhasil diperbarui.');
+    }
+}
