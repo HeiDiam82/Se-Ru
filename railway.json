@@ -1,7 +1,12 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "NIXPACKS",
+    "nixpacksPlan": {
+      "variables": {
+        "NIXPACKS_NPM_INSTALL_CMD": "npm install --no-package-lock"
+      }
+    }
   },
   "deploy": {
     "releaseCommand": "php artisan migrate --force"
