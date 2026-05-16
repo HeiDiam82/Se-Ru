@@ -4,7 +4,8 @@
     "builder": "NIXPACKS",
     "nixpacksPlan": {
       "variables": {
-        "NIXPACKS_NPM_INSTALL_CMD": "npm install --no-package-lock"
+        "NIXPACKS_NPM_INSTALL_CMD": "npm install --no-package-lock",
+        "NIXPACKS_NODE_VERSION": "20"
       }
     }
   },
