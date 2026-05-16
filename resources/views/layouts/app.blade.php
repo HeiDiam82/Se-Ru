@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'Se-Ru') }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#Fdfcf0] font-sans antialiased text-gray-900">
+<body class="bg-[#Fdfcf0] font-sans antialiased text-gray-900" style="font-family: 'Inter', sans-serif;">
     <nav class="bg-[#4A0404] text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -16,8 +18,10 @@
                         <a href="{{ route('katalog') }}" class="hover:text-[#D2B48C] transition">Katalog Ruko</a>
                         @auth
                             @if(auth()->user()->role === 'admin')
-                                <a href="{{ route('admin.dashboard') }}" class="hover:text-[#D2B48C] transition">Admin Dashboard</a>
-                                <a href="{{ route('admin.ruko.index') }}" class="hover:text-[#D2B48C] transition">Kelola Ruko</a>
+                                <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center gap-2 bg-[#D2B48C] text-[#4A0404] px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-white transition shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                    Admin Panel
+                                </a>
                             @else
                                 <a href="{{ route('dashboard') }}" class="hover:text-[#D2B48C] transition">Dashboard Saya</a>
                             @endif

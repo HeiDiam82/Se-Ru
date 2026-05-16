@@ -5,17 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Ruko;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class RukoController extends Controller
 {
     // User endpoints
     public function index(Request $request)
     {
-        $query = Ruko::where('status', 'available');
+        $query = Ruko::query();
 
         if ($request->filled('search')) {
-            $query->where('name', 'ilike', '%' . $request->search . '%')
-                  ->orWhere('address', 'ilike', '%' . $request->search . '%');
+            $search = '%' . $request->search . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', $search)
+                  ->orWhere('address', 'ilike', $search);
+            });
         }
 
         if ($request->filled('min_price')) {
@@ -26,14 +30,20 @@ class RukoController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        $rukos = $query->get();
+        // Available ones first, then rented
+        $rukos = $query->orderByRaw("CASE WHEN status = 'available' THEN 0 ELSE 1 END")->get();
 
-        return view('katalog', compact('rukos')); // Will use blade
+        return view('katalog', compact('rukos'));
     }
 
     public function show(Ruko $ruko)
     {
         return view('detail_ruko', compact('ruko'));
+    }
+
+    public function edit(Ruko $ruko)
+    {
+        return view('admin.ruko.edit', compact('ruko'));
     }
 
     // Admin endpoints
@@ -104,7 +114,9 @@ class RukoController extends Controller
     {
         if ($ruko->photos) {
             foreach ($ruko->photos as $photo) {
-                Storage::disk('public')->delete($photo);
+                if (!Str::startsWith($photo, 'http')) {
+                    Storage::disk('public')->delete($photo);
+                }
             }
         }
         $ruko->delete();

@@ -43,10 +43,22 @@ class BookingController extends Controller
     }
 
     // Admin endpoints
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
-        $bookings = Booking::with(['user', 'ruko'])->orderBy('created_at', 'desc')->get();
+        $query = Booking::with(['user', 'ruko'])->orderBy('created_at', 'desc');
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        $bookings = $query->get();
         return view('admin.bookings.index', compact('bookings'));
+    }
+
+    public function adminShow(Booking $booking)
+    {
+        $booking->load(['user', 'ruko']);
+        return view('admin.bookings.show', compact('booking'));
     }
 
     public function updateStatus(Request $request, Booking $booking)

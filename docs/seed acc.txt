@@ -1,0 +1,7 @@
+admin:
+admin@se-ru.com
+password123
+
+User:
+farrel@example.com
+password123
