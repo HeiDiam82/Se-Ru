@@ -83,8 +83,8 @@
                             <h3 class="text-lg font-bold mb-4">Langkah 2: Verifikasi Identitas</h3>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Upload KTP (JPG/PNG/PDF)</label>
-                                <input type="file" name="ktp_proof" accept=".jpg,.jpeg,.png,.pdf" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
-                                <p class="text-xs text-gray-500 mt-1">Data Anda aman dan dienkripsi.</p>
+                                <input type="file" name="ktp_proof" accept=".jpg,.jpeg,.png,.pdf" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
+                                <p class="text-xs text-gray-500 mt-1">Data Anda aman dan dienkripsi. <span class="text-[#D2B48C]">*Wajib diunggah</span></p>
                             </div>
                             <div class="flex space-x-4">
                                 <button type="button" @click="step = 1" class="w-1/3 bg-gray-300 text-gray-700 px-4 py-3 rounded hover:bg-gray-400 transition font-bold">&larr; Kembali</button>
@@ -101,7 +101,7 @@
                             </div>
                             <div class="mb-6">
                                 <label class="block text-sm font-medium text-gray-700">Upload Bukti Transfer</label>
-                                <input type="file" name="transfer_proof" accept=".jpg,.jpeg,.png,.pdf" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
+                                <input type="file" name="transfer_proof" accept=".jpg,.jpeg,.png,.pdf" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
                             </div>
                             <div class="flex space-x-4">
                                 <button type="button" @click="step = 2" class="w-1/3 bg-gray-300 text-gray-700 px-4 py-3 rounded hover:bg-gray-400 transition font-bold">&larr; Kembali</button>

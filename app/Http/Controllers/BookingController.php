@@ -13,24 +13,35 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ruko_id' => 'required|exists:ruko,ruko_id',
+            'ruko_id'         => 'required|exists:ruko,ruko_id',
             'duration_months' => 'required|integer|min:1',
-            'usage_plan' => 'required|string',
-            'ktp_proof' => 'required|file|mimes:pdf,jpeg,png,jpg|max:5120',
-            'transfer_proof' => 'required|file|mimes:pdf,jpeg,png,jpg|max:5120',
+            'usage_plan'      => 'required|string',
+            'ktp_proof'       => 'required',
+            'transfer_proof'  => 'required',
         ]);
 
-        $ktpPath = $request->file('ktp_proof')->store('ktp', 'public');
-        $transferPath = $request->file('transfer_proof')->store('transfer_proofs', 'public');
+        // KTP — bisa file upload atau URL (jika sudah ada link)
+        if ($request->hasFile('ktp_proof')) {
+            $ktpPath = $request->file('ktp_proof')->store('ktp', 'public');
+        } else {
+            $ktpPath = $request->input('ktp_proof');
+        }
+
+        // Bukti Transfer — bisa file upload atau URL
+        if ($request->hasFile('transfer_proof')) {
+            $transferPath = $request->file('transfer_proof')->store('transfer_proofs', 'public');
+        } else {
+            $transferPath = $request->input('transfer_proof');
+        }
 
         Booking::create([
-            'user_id' => Auth::id(),
-            'ruko_id' => $request->ruko_id,
+            'user_id'         => Auth::id(),
+            'ruko_id'         => $request->ruko_id,
             'duration_months' => $request->duration_months,
-            'usage_plan' => $request->usage_plan,
-            'ktp_proof' => $ktpPath,
-            'transfer_proof' => $transferPath,
-            'status' => 'pending',
+            'usage_plan'      => $request->usage_plan,
+            'ktp_proof'       => $ktpPath,
+            'transfer_proof'  => $transferPath,
+            'status'          => 'pending',
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Pengajuan sewa berhasil dikirim dan sedang menunggu validasi admin.');
@@ -71,6 +82,16 @@ class BookingController extends Controller
 
         if ($request->status === 'approved') {
             $booking->ruko->update(['status' => 'rented']);
+        }
+
+        // Jika di-reject, kembalikan status ruko ke available (jika tidak ada booking approved lain)
+        if ($request->status === 'rejected') {
+            $hasOtherApproved = Booking::where('ruko_id', $booking->ruko_id)
+                ->where('status', 'approved')
+                ->exists();
+            if (!$hasOtherApproved) {
+                $booking->ruko->update(['status' => 'available']);
+            }
         }
 
         return redirect()->route('admin.bookings.index')->with('success', 'Status pemesanan berhasil diperbarui.');
