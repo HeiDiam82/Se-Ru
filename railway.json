@@ -5,7 +5,7 @@
     "nixpacksPlan": {
       "variables": {
         "NIXPACKS_NPM_INSTALL_CMD": "rm -f package-lock.json && npm install",
-        "NIXPACKS_NODE_VERSION": "20"
+        "NIXPACKS_NODE_VERSION": "22"
       }
     }
   },
