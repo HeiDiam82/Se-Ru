@@ -1,3 +1,3 @@
 [variables]
 NIXPACKS_NODE_VERSION = "20"
-NIXPACKS_NPM_INSTALL_CMD = "npm install --no-package-lock"
+NIXPACKS_NPM_INSTALL_CMD = "rm -f package-lock.json && npm install"
