@@ -10,6 +10,7 @@
     }
   },
   "deploy": {
-    "releaseCommand": "php artisan migrate --force"
+    "releaseCommand": "php artisan migrate --force",
+    "startCommand": "php artisan serve --host=0.0.0.0 --port=$PORT"
   }
 }
