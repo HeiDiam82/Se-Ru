@@ -1,36 +1,41 @@
-# Tahap 1: Build aset frontend dengan Node.js 22 (Wajib untuk Vite 8)
-FROM node:22 AS frontend
+# Stage 1: Build frontend assets
+FROM node:22-alpine AS frontend
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-# Tahap 2: Gunakan FrankenPHP (Server PHP Super Cepat & Modern, Anti Error Apache/Nginx)
-FROM dunglas/frankenphp:php8.3
+# Stage 2: PHP + Nginx production setup
+FROM php:8.3-fpm-alpine
 
-# Install ekstensi PostgreSQL untuk Neon DB
-RUN install-php-extensions pdo_pgsql pgsql zip
+# Install system dependencies + Nginx
+RUN apk add --no-cache nginx supervisor postgresql-dev libpq \
+    && docker-php-ext-install pdo pdo_pgsql opcache
 
-WORKDIR /app
-
-# Copy Composer
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy semua file Laravel
-COPY . .
+WORKDIR /var/www/html
 
-# Copy hasil build Vite dari Tahap 1
+# Copy app files
+COPY . .
 COPY --from=frontend /app/public/build ./public/build
 
-# Install dependensi PHP tanpa error interaksi
-RUN composer install --optimize-autoloader --no-dev
+# Install PHP dependencies
+RUN composer install --optimize-autoloader --no-dev --no-interaction
 
-# Beri hak akses ke folder storage dan cache
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Wajib Expose Port 8080 untuk proksi Railway
+# Nginx config
+RUN mkdir -p /run/nginx
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
+
+# Supervisord config
+COPY docker/supervisord.conf /etc/supervisord.conf
+
 EXPOSE 8080
 
-# Jalankan migrasi dan nyalakan server FrankenPHP (menggantikan Apache/Nginx yang rewel)
-CMD bash -c "php artisan migrate --force && frankenphp php-server -r public/ --listen :8080"
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
