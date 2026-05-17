@@ -35,5 +35,5 @@ RUN composer install --optimize-autoloader --no-dev
 # Beri hak akses
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Jalankan server bawaan Laravel yang langsung menyesuaikan dengan Port Railway
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+# Jalankan migrasi database otomatis, lalu nyalakan server bawaan Laravel
+CMD bash -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"

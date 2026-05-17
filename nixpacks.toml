@@ -1,3 +1,0 @@
-[variables]
-NIXPACKS_NODE_VERSION = "22"
-NIXPACKS_NPM_INSTALL_CMD = "rm -f package-lock.json && npm install"
