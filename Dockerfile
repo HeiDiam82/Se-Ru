@@ -6,10 +6,10 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Stage 2: PHP + Nginx production setup
+# Stage 2: PHP-FPM + Nginx (Industry Standard Laravel Production)
 FROM php:8.3-fpm-alpine
 
-# Install system dependencies + Nginx
+# Install Nginx, Supervisor, dan ekstensi PostgreSQL
 RUN apk add --no-cache nginx supervisor postgresql-dev libpq \
     && docker-php-ext-install pdo pdo_pgsql opcache
 
@@ -18,7 +18,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy app files
+# Copy semua file Laravel
 COPY . .
 COPY --from=frontend /app/public/build ./public/build
 
@@ -29,13 +29,12 @@ RUN composer install --optimize-autoloader --no-dev --no-interaction
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Nginx config
-RUN mkdir -p /run/nginx
+# Copy konfigurasi Nginx dan Supervisord
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
-
-# Supervisord config
 COPY docker/supervisord.conf /etc/supervisord.conf
 
-EXPOSE 8080
+# Buat folder run untuk nginx
+RUN mkdir -p /run/nginx
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Jalankan migrasi lalu start php-fpm dan nginx langsung (tanpa file entrypoint terpisah)
+CMD sh -c "php /var/www/html/artisan migrate --force && php-fpm -D && nginx -g 'daemon off;'"
