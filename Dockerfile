@@ -35,5 +35,8 @@ RUN composer install --optimize-autoloader --no-dev
 # Beri hak akses
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
+# Wajib menambahkan EXPOSE agar Railway tahu port mana yang harus dihubungkan
+EXPOSE 8080
+
 # Jalankan migrasi database otomatis, lalu nyalakan server bawaan Laravel
-CMD bash -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
+CMD bash -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080"
