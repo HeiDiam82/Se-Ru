@@ -1,0 +1,7 @@
+/node_modules
+/vendor
+/public/build
+/.env
+/.git
+/.github
+/storage/*.key
