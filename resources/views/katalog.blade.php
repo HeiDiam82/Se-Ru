@@ -91,7 +91,7 @@
                                     <p class="text-xs text-gray-400">Harga sewa</p>
                                     <p class="text-xl font-extrabold text-[#4A0404]">Rp {{ number_format($ruko->price / 1000000, 0, ',', '.') }} Jt <span class="text-sm font-medium text-gray-400">/ bln</span></p>
                                 </div>
-                                <a href="{{ route('ruko.show', $ruko->ruko_id) }}" class="bg-[#4A0404] text-white px-4 py-2 rounded-lg hover:bg-[#D2B48C] hover:text-[#4A0404] transition font-bold text-sm shadow-sm">Detail →</a>
+                                <a href="{{ route('ruko.show', $ruko->ruko_id) }}" class="bg-[#4A0404] text-white px-4 py-2 rounded-lg hover:bg-[#D2B48C] hover:text-[#4A0404] active:scale-95 transition-all duration-200 font-bold text-sm shadow-sm">Detail →</a>
                             </div>
                         </div>
                     </div>
