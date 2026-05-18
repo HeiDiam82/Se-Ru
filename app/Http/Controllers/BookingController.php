@@ -75,7 +75,7 @@ class BookingController extends Controller
     public function updateStatus(Request $request, Booking $booking)
     {
         $request->validate([
-            'status' => 'required|in:approved,rejected',
+            'status' => 'required|in:approved,rejected,terminated',
         ]);
 
         $booking->update(['status' => $request->status]);
@@ -84,8 +84,8 @@ class BookingController extends Controller
             $booking->ruko->update(['status' => 'rented']);
         }
 
-        // Jika di-reject, kembalikan status ruko ke available (jika tidak ada booking approved lain)
-        if ($request->status === 'rejected') {
+        // Jika di-reject atau dihentikan, kembalikan status ruko ke available (jika tidak ada booking approved lain)
+        if ($request->status === 'rejected' || $request->status === 'terminated') {
             $hasOtherApproved = Booking::where('ruko_id', $booking->ruko_id)
                 ->where('status', 'approved')
                 ->exists();

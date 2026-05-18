@@ -19,11 +19,11 @@
         <div class="rounded-2xl p-5 flex items-center gap-4 
             {{ $booking->status === 'pending' ? 'bg-yellow-50 border border-yellow-200' : '' }}
             {{ $booking->status === 'approved' ? 'bg-green-50 border border-green-200' : '' }}
-            {{ $booking->status === 'rejected' ? 'bg-red-50 border border-red-200' : '' }}">
+            {{ in_array($booking->status, ['rejected', 'terminated']) ? 'bg-red-50 border border-red-200' : '' }}">
             <div class="w-12 h-12 rounded-full flex items-center justify-center
                 {{ $booking->status === 'pending' ? 'bg-yellow-100' : '' }}
                 {{ $booking->status === 'approved' ? 'bg-green-100' : '' }}
-                {{ $booking->status === 'rejected' ? 'bg-red-100' : '' }}">
+                {{ in_array($booking->status, ['rejected', 'terminated']) ? 'bg-red-100' : '' }}">
                 @if($booking->status === 'pending')
                     <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 @elseif($booking->status === 'approved')
@@ -35,7 +35,7 @@
             <div>
                 <p class="font-bold text-gray-900">Status: 
                     <span class="{{ $booking->status === 'pending' ? 'text-yellow-700' : ($booking->status === 'approved' ? 'text-green-700' : 'text-red-700') }}">
-                        {{ $booking->status === 'pending' ? 'Menunggu Validasi Admin' : ($booking->status === 'approved' ? 'Pengajuan Disetujui' : 'Pengajuan Ditolak') }}
+                        {{ $booking->status === 'pending' ? 'Menunggu Validasi Admin' : ($booking->status === 'approved' ? 'Pengajuan Disetujui' : ($booking->status === 'terminated' ? 'Sewa Dihentikan' : 'Pengajuan Ditolak')) }}
                     </span>
                 </p>
                 <p class="text-sm text-gray-500">Diajukan pada {{ $booking->created_at->format('d F Y, H:i') }} WIB</p>
@@ -170,6 +170,20 @@
                 <button type="submit" class="w-full py-3 px-4 bg-white border-2 border-red-200 text-red-600 rounded-xl font-bold text-sm hover:bg-red-50 transition flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Tolak Pengajuan
+                </button>
+            </form>
+        </div>
+        @elseif($booking->status === 'approved')
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-bold text-gray-900 mb-2">Manajemen Sewa</h3>
+            <p class="text-sm text-gray-500 mb-5">Hentikan penyewaan jika terdapat masalah atau masa sewa telah berakhir.</p>
+            
+            <form action="{{ route('admin.bookings.status', $booking->booking_id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin memberhentikan sewa ini? Status ruko akan kembali tersedia.');">
+                @csrf
+                <input type="hidden" name="status" value="terminated">
+                <button type="submit" class="w-full py-3 px-4 bg-white border-2 border-red-200 text-red-600 rounded-xl font-bold text-sm hover:bg-red-50 transition flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Berhentikan Sewa
                 </button>
             </form>
         </div>

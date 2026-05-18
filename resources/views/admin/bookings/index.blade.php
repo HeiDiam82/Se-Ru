@@ -8,13 +8,14 @@
 <!-- Filter Tabs -->
 <div class="flex gap-2 mb-6 flex-wrap">
     @php
-        $statuses = ['all' => 'Semua', 'pending' => 'Menunggu', 'approved' => 'Disetujui', 'rejected' => 'Ditolak'];
+        $statuses = ['all' => 'Semua', 'pending' => 'Menunggu', 'approved' => 'Disetujui', 'rejected' => 'Ditolak', 'terminated' => 'Dihentikan'];
         $current = request('status', 'all');
         $counts = [
             'all' => \App\Models\Booking::count(),
             'pending' => \App\Models\Booking::where('status','pending')->count(),
             'approved' => \App\Models\Booking::where('status','approved')->count(),
             'rejected' => \App\Models\Booking::where('status','rejected')->count(),
+            'terminated' => \App\Models\Booking::where('status','terminated')->count(),
         ];
     @endphp
     @foreach($statuses as $key => $label)
@@ -63,8 +64,8 @@
                     <span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-full
                         {{ $booking->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
                         {{ $booking->status === 'approved' ? 'bg-green-100 text-green-700' : '' }}
-                        {{ $booking->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-                        {{ $booking->status === 'pending' ? 'Menunggu' : ($booking->status === 'approved' ? 'Disetujui' : 'Ditolak') }}
+                        {{ in_array($booking->status, ['rejected', 'terminated']) ? 'bg-red-100 text-red-700' : '' }}">
+                        {{ $booking->status === 'pending' ? 'Menunggu' : ($booking->status === 'approved' ? 'Disetujui' : ($booking->status === 'terminated' ? 'Dihentikan' : 'Ditolak')) }}
                     </span>
                 </td>
                 <td class="px-6 py-4">

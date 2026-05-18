@@ -18,8 +18,8 @@
                                 <p class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     {{ $booking->status === 'approved' ? 'bg-green-100 text-green-800' : '' }}
                                     {{ $booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                    {{ $booking->status === 'rejected' ? 'bg-red-100 text-red-800' : '' }}">
-                                    {{ strtoupper($booking->status) }}
+                                    {{ in_array($booking->status, ['rejected', 'terminated']) ? 'bg-red-100 text-red-800' : '' }}">
+                                    {{ strtoupper($booking->status === 'terminated' ? 'dihentikan' : $booking->status) }}
                                 </p>
                             </div>
                         </div>
