@@ -3,8 +3,14 @@
 @section('content')
 <div class="min-h-screen flex">
     <!-- Right: Form Section -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center bg-[#Fdfcf0] px-8 sm:px-16 lg:px-24">
-        <div class="max-w-md w-full">
+    <div class="w-full lg:w-1/2 flex flex-col items-center justify-center bg-[#Fdfcf0] px-8 sm:px-16 lg:px-24 relative">
+        <!-- Back Button -->
+        <a href="/" class="absolute top-8 left-8 sm:left-12 flex items-center text-gray-500 hover:text-[#4A0404] transition font-semibold">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali ke Beranda
+        </a>
+
+        <div class="max-w-md w-full mt-12 lg:mt-0">
             <div class="mb-10">
                 <h2 class="text-3xl font-extrabold text-[#4A0404] mb-2">Mulai Langkah Pertama</h2>
                 <p class="text-gray-600">Buat akun Se-Ru Anda secara gratis untuk mulai mencari dan menyewa ruko impian.</p>

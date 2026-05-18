@@ -9,6 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-[#Fdfcf0] font-sans antialiased text-gray-900" style="font-family: 'Inter', sans-serif;">
+    @if(!request()->routeIs('login') && !request()->routeIs('register'))
     <nav class="bg-[#4A0404] text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -43,6 +44,7 @@
             </div>
         </div>
     </nav>
+    @endif
 
     <main>
         @if(session('success'))
@@ -63,10 +65,12 @@
         @yield('content')
     </main>
 
+    @if(!request()->routeIs('login') && !request()->routeIs('register'))
     <footer class="bg-[#4A0404] text-white py-8 mt-12">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <p>&copy; {{ date('Y') }} Se-Ru (Sewa Ruko). Hak Cipta Dilindungi.</p>
         </div>
     </footer>
+    @endif
 </body>
 </html>
