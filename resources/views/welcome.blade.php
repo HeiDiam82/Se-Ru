@@ -20,7 +20,7 @@
                         <a href="{{ route('katalog') }}" class="w-full flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-xl text-white bg-[#4A0404] hover:bg-opacity-90 md:w-auto shadow-xl transition transform hover:-translate-y-1">
                             Cari Ruko Sekarang
                         </a>
-                        <a href="/register" class="mt-3 w-full flex items-center justify-center px-8 py-4 border-2 border-[#4A0404] text-lg font-bold rounded-xl text-[#4A0404] bg-transparent hover:bg-gray-50 md:w-auto md:mt-0 shadow-sm transition">
+                        <a href="{{ route('register') }}" class="mt-3 w-full flex items-center justify-center px-8 py-4 border-2 border-[#4A0404] text-lg font-bold rounded-xl text-[#4A0404] bg-transparent hover:bg-gray-50 md:w-auto md:mt-0 shadow-sm transition">
                             Jadi Member Baru
                         </a>
                     </div>
@@ -173,7 +173,7 @@
         </h2>
         <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div class="inline-flex rounded-md shadow">
-                <a href="/register" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-lg text-[#4A0404] bg-[#D2B48C] hover:bg-white transition duration-300">
+                <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-lg text-[#4A0404] bg-[#D2B48C] hover:bg-white transition duration-300">
                     Mulai Sekarang
                 </a>
             </div>
