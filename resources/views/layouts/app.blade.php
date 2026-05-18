@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <a href="/" class="text-2xl font-bold tracking-wider">SE-RU</a>
+                    <a href="{{ url('/') }}" class="text-2xl font-bold tracking-wider">SE-RU</a>
                     <div class="hidden md:flex space-x-8 ml-10">
                         <a href="{{ route('katalog') }}" class="hover:text-[#D2B48C] transition">Katalog Ruko</a>
                         @auth
