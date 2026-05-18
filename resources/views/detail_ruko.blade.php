@@ -39,9 +39,12 @@
         </div>
 
         <!-- Booking Form (Alpine JS Multi-step) -->
-        <div class="w-full lg:w-1/2 p-8" x-data="{ step: 1 }">
+        <div class="w-full lg:w-1/2 p-8"
+             x-data="{
+                step: {{ $errors->has('usage_plan') || $errors->has('duration_months') ? 1 : ($errors->has('ktp_proof') ? 2 : ($errors->any() ? 3 : 1)) }}
+             }">
             <h2 class="text-2xl font-bold text-[#4A0404] mb-6">Formulir Penyewaan</h2>
-            
+
             @if($ruko->status !== 'available')
                 <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
                     <p>Maaf, ruko ini sedang tidak tersedia untuk disewa saat ini.</p>
@@ -60,7 +63,12 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('book.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('book.store') }}" method="POST" enctype="multipart/form-data"
+                          @submit.prevent="
+                            if (step === 1) { step = 2; return; }
+                            if (step === 2) { step = 3; return; }
+                            $el.submit();
+                          ">
                         @csrf
                         <input type="hidden" name="ruko_id" value="{{ $ruko->ruko_id }}">
 
@@ -69,13 +77,26 @@
                             <h3 class="text-lg font-bold mb-4">Langkah 1: Detail Rencana Sewa</h3>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Durasi Sewa (Bulan)</label>
-                                <input type="number" name="duration_months" min="1" value="1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#4A0404] focus:ring focus:ring-[#4A0404] focus:ring-opacity-50">
+                                <input type="number" id="duration_months" name="duration_months" min="1"
+                                       value="{{ old('duration_months', 1) }}"
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#4A0404] focus:ring focus:ring-[#4A0404] focus:ring-opacity-50">
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Rencana Penggunaan (Jenis Usaha)</label>
-                                <textarea name="usage_plan" rows="3" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#4A0404] focus:ring focus:ring-[#4A0404] focus:ring-opacity-50"></textarea>
+                                <textarea id="usage_plan" name="usage_plan" rows="3"
+                                          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#4A0404] focus:ring focus:ring-[#4A0404] focus:ring-opacity-50">{{ old('usage_plan') }}</textarea>
                             </div>
-                            <button type="button" @click="step = 2" class="w-full bg-[#4A0404] text-white px-4 py-3 rounded hover:bg-opacity-90 transition font-bold">Lanjut ke Identitas &rarr;</button>
+                            <button type="button"
+                                    @click="
+                                        const dur = document.getElementById('duration_months').value;
+                                        const usg = document.getElementById('usage_plan').value;
+                                        if (!dur || parseInt(dur) < 1) { alert('Mohon isi durasi sewa minimal 1 bulan.'); return; }
+                                        if (!usg.trim()) { alert('Mohon isi rencana penggunaan.'); return; }
+                                        step = 2;
+                                    "
+                                    class="w-full bg-[#4A0404] text-white px-4 py-3 rounded hover:bg-opacity-90 transition font-bold">
+                                Lanjut ke Identitas &rarr;
+                            </button>
                         </div>
 
                         <!-- Step 2 -->
@@ -83,12 +104,21 @@
                             <h3 class="text-lg font-bold mb-4">Langkah 2: Verifikasi Identitas</h3>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700">Upload KTP (JPG/PNG/PDF)</label>
-                                <input type="file" name="ktp_proof" accept=".jpg,.jpeg,.png,.pdf" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
+                                <input type="file" id="ktp_proof" name="ktp_proof" accept=".jpg,.jpeg,.png,.pdf"
+                                       class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
                                 <p class="text-xs text-gray-500 mt-1">Data Anda aman dan dienkripsi. <span class="text-[#D2B48C]">*Wajib diunggah</span></p>
                             </div>
                             <div class="flex space-x-4">
                                 <button type="button" @click="step = 1" class="w-1/3 bg-gray-300 text-gray-700 px-4 py-3 rounded hover:bg-gray-400 transition font-bold">&larr; Kembali</button>
-                                <button type="button" @click="step = 3" class="w-2/3 bg-[#4A0404] text-white px-4 py-3 rounded hover:bg-opacity-90 transition font-bold">Lanjut ke Pembayaran &rarr;</button>
+                                <button type="button"
+                                        @click="
+                                            const ktp = document.getElementById('ktp_proof').files.length;
+                                            if (!ktp) { alert('Mohon upload foto KTP Anda terlebih dahulu.'); return; }
+                                            step = 3;
+                                        "
+                                        class="w-2/3 bg-[#4A0404] text-white px-4 py-3 rounded hover:bg-opacity-90 transition font-bold">
+                                    Lanjut ke Pembayaran &rarr;
+                                </button>
                             </div>
                         </div>
 
@@ -101,11 +131,21 @@
                             </div>
                             <div class="mb-6">
                                 <label class="block text-sm font-medium text-gray-700">Upload Bukti Transfer</label>
-                                <input type="file" name="transfer_proof" accept=".jpg,.jpeg,.png,.pdf" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
+                                <input type="file" id="transfer_proof" name="transfer_proof" accept=".jpg,.jpeg,.png,.pdf"
+                                       class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-50">
+                                <p class="text-xs text-gray-500 mt-1"><span class="text-[#D2B48C]">*Wajib diunggah sebelum kirim</span></p>
                             </div>
                             <div class="flex space-x-4">
                                 <button type="button" @click="step = 2" class="w-1/3 bg-gray-300 text-gray-700 px-4 py-3 rounded hover:bg-gray-400 transition font-bold">&larr; Kembali</button>
-                                <button type="submit" class="w-2/3 bg-[#D2B48C] text-[#4A0404] px-4 py-3 rounded hover:bg-white border border-[#D2B48C] transition font-bold shadow-lg">Kirim Pengajuan Sewa</button>
+                                <button type="button"
+                                        @click="
+                                            const tf = document.getElementById('transfer_proof').files.length;
+                                            if (!tf) { alert('Mohon upload bukti transfer terlebih dahulu.'); return; }
+                                            $el.closest('form').submit();
+                                        "
+                                        class="w-2/3 bg-[#D2B48C] text-[#4A0404] px-4 py-3 rounded hover:bg-white border border-[#D2B48C] transition font-bold shadow-lg">
+                                    Kirim Pengajuan Sewa
+                                </button>
                             </div>
                         </div>
                     </form>
