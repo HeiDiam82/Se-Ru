@@ -31,8 +31,8 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     @guest
-                        <a href="/login" class="hover:text-[#D2B48C] transition">Masuk</a>
-                        <a href="/register" class="bg-[#D2B48C] text-[#4A0404] px-4 py-2 rounded-md font-semibold hover:bg-white transition">Daftar</a>
+                        <a href="{{ route('login') }}" class="hover:text-[#D2B48C] transition">Masuk</a>
+                        <a href="{{ route('register') }}" class="bg-[#D2B48C] text-[#4A0404] px-4 py-2 rounded-md font-semibold hover:bg-white transition">Daftar</a>
                     @else
                         <span>Halo, {{ auth()->user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
