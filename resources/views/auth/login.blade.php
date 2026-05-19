@@ -27,7 +27,7 @@
                 <p class="text-gray-600">Silakan masukkan kredensial Anda untuk melanjutkan ke dashboard.</p>
             </div>
 
-            <form class="space-y-6" action="{{ route('login') }}" method="POST">
+            <form class="space-y-6" action="/login" method="POST">
                 @csrf
                 <div>
                     <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
