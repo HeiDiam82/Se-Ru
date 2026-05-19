@@ -20,9 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Railway menggunakan reverse proxy yang menghandle SSL termination.
-        // Tanpa ini, Laravel akan generate URL http:// yang diblokir browser (Mixed Content Error).
-        if ($this->app->environment('production')) {
+        // Memaksa HTTPS jika APP_URL diset ke https:// (berguna jika APP_ENV di Railway masih local)
+        if (str_contains(env('APP_URL'), 'https://') || $this->app->environment('production')) {
             URL::forceScheme('https');
         }
     }
