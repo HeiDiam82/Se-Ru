@@ -19,7 +19,7 @@
                                     {{ $booking->status === 'approved' ? 'bg-green-100 text-green-800' : '' }}
                                     {{ $booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
                                     {{ in_array($booking->status, ['rejected', 'terminated']) ? 'bg-red-100 text-red-800' : '' }}">
-                                    {{ strtoupper($booking->status === 'terminated' ? 'dihentikan' : $booking->status) }}
+                                    {{ strtoupper($booking->status === 'pending' ? 'Menunggu' : ($booking->status === 'approved' ? 'Disetujui' : ($booking->status === 'terminated' ? 'Dihentikan' : 'Ditolak'))) }}
                                 </p>
                             </div>
                         </div>
