@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <a href="{{ url('/') }}" class="text-2xl font-bold tracking-wider">SE-RU</a>
+                    <a href="/" class="text-2xl font-bold tracking-wider">SE-RU</a>
                     <div class="hidden md:flex space-x-8 ml-10">
                         <a href="{{ route('katalog') }}" class="hover:text-[#D2B48C] transition">Katalog Ruko</a>
                         @auth
@@ -31,8 +31,8 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     @guest
-                        <a href="{{ route('login') }}" class="hover:text-[#D2B48C] transition">Masuk</a>
-                        <a href="{{ route('register') }}" class="bg-[#D2B48C] text-[#4A0404] px-4 py-2 rounded-md font-semibold hover:bg-white transition">Daftar</a>
+                        <a href="/login" class="hover:text-[#D2B48C] transition">Masuk</a>
+                        <a href="/register" class="bg-[#D2B48C] text-[#4A0404] px-4 py-2 rounded-md font-semibold hover:bg-white transition">Daftar</a>
                     @else
                         <span>Halo, {{ auth()->user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
