@@ -31,12 +31,18 @@
                 @csrf
                 <div>
                     <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Alamat Email</label>
-                    <input id="email" name="email" type="email" required autofocus class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A0404] focus:border-transparent transition duration-200" placeholder="nama@email.com">
+                    <input id="email" name="email" value="{{ old('email') }}" type="email" required autofocus class="appearance-none block w-full px-4 py-3 border @error('email') border-red-500 @else border-gray-300 @enderror rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A0404] focus:border-transparent transition duration-200" placeholder="nama@email.com">
+                    @error('email')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi</label>
-                    <input id="password" name="password" type="password" required class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A0404] focus:border-transparent transition duration-200" placeholder="••••••••">
+                    <input id="password" name="password" type="password" required class="appearance-none block w-full px-4 py-3 border @error('password') border-red-500 @else border-gray-300 @enderror rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#4A0404] focus:border-transparent transition duration-200" placeholder="••••••••">
+                    @error('password')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex items-center justify-between">
