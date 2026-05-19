@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="min-h-screen flex">
     <!-- Left: Image Section -->
     <div class="hidden lg:flex lg:w-1/2 relative bg-[#4A0404]">
