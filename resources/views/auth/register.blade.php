@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="min-h-screen flex">
     <!-- Right: Form Section -->
     <div class="w-full lg:w-1/2 flex flex-col items-center justify-center bg-[#Fdfcf0] px-8 sm:px-16 lg:px-24 relative">
