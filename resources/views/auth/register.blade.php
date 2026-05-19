@@ -17,7 +17,7 @@
                 <p class="text-gray-600">Buat akun Se-Ru Anda secara gratis untuk mulai mencari dan menyewa ruko impian.</p>
             </div>
 
-            <form class="space-y-5" action="/register" method="POST">
+            <form class="space-y-5" action="{{ route('register') }}" method="POST">
                 @csrf
                 <div>
                     <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
