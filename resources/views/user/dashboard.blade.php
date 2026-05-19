@@ -12,11 +12,11 @@
                 @foreach($bookings as $booking)
                 <li>
                     <div class="px-4 py-4 sm:px-6">
-                        <div class="flex items-center justify-between">
-                            <p class="text-lg font-bold text-[#4A0404] truncate">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+                            <p class="text-lg font-bold text-[#4A0404] truncate w-full sm:w-auto">
                                 {{ $booking->ruko->name }}
                             </p>
-                            <div class="ml-2 flex-shrink-0 flex">
+                            <div class="flex-shrink-0">
                                 <p class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     {{ $booking->status === 'approved' ? 'bg-green-100 text-green-800' : '' }}
                                     {{ $booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
