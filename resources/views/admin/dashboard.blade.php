@@ -140,8 +140,8 @@
                 <span class="text-xs font-bold px-2 py-1 rounded-full flex-shrink-0
                     {{ $booking->status === 'pending' ? 'bg-yellow-100 text-yellow-700' : '' }}
                     {{ $booking->status === 'approved' ? 'bg-green-100 text-green-700' : '' }}
-                    {{ $booking->status === 'rejected' ? 'bg-red-100 text-red-700' : '' }}">
-                    {{ strtoupper($booking->status) }}
+                    {{ in_array($booking->status, ['rejected', 'terminated']) ? 'bg-red-100 text-red-700' : '' }}">
+                    {{ strtoupper($booking->status === 'pending' ? 'Menunggu' : ($booking->status === 'approved' ? 'Disetujui' : ($booking->status === 'terminated' ? 'Dihentikan' : 'Ditolak'))) }}
                 </span>
             </a>
             @empty
