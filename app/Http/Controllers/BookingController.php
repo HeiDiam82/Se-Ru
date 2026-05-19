@@ -16,8 +16,8 @@ class BookingController extends Controller
             'ruko_id'         => 'required|exists:ruko,ruko_id',
             'duration_months' => 'required|integer|min:1',
             'usage_plan'      => 'required|string',
-            'ktp_proof'       => 'nullable',
-            'transfer_proof'  => 'nullable',
+            'ktp_proof'       => 'nullable|mimes:jpg,jpeg,png,pdf|max:5120',
+            'transfer_proof'  => 'nullable|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
         // KTP — bisa file upload atau URL (jika sudah ada link)
