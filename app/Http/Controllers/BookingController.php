@@ -20,6 +20,22 @@ class BookingController extends Controller
             'transfer_proof'  => 'nullable|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
+        // Cek apakah ruko tersedia
+        $ruko = Ruko::findOrFail($request->ruko_id);
+        if ($ruko->status !== 'available') {
+            return back()->withErrors(['ruko_id' => 'Maaf, ruko ini sudah tidak tersedia atau sedang disewa.'])->withInput();
+        }
+
+        // Cek apakah user sudah punya booking aktif di ruko ini
+        $activeBooking = Booking::where('user_id', Auth::id())
+            ->where('ruko_id', $request->ruko_id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->exists();
+
+        if ($activeBooking) {
+            return back()->withErrors(['ruko_id' => 'Anda sudah memiliki pengajuan aktif untuk ruko ini.'])->withInput();
+        }
+
         // KTP — bisa file upload atau URL (jika sudah ada link)
         if ($request->hasFile('ktp_proof')) {
             $ktpPath = $request->file('ktp_proof')->store('ktp', 'public');
