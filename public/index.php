@@ -1,3 +1,4 @@
+<!-- Add contributor -->
 <?php
 
 use Illuminate\Foundation\Application;
