@@ -13,9 +13,12 @@
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-<div class="flex min-h-screen">
+<div class="flex min-h-screen relative">
+    <!-- Mobile overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden transition-opacity"></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-[#4A0404] flex flex-col flex-shrink-0 min-h-screen">
+    <aside id="adminSidebar" class="w-64 bg-[#4A0404] flex flex-col flex-shrink-0 min-h-screen fixed lg:static inset-y-0 left-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
         <!-- Logo -->
         <div class="p-6 border-b border-white/10">
             <div class="flex items-center gap-3">
@@ -85,12 +88,17 @@
     </aside>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col min-w-0">
+    <div class="flex-1 flex flex-col min-w-0 w-full lg:w-auto">
         <!-- Top Bar -->
-        <header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between flex-shrink-0">
-            <div>
-                <h1 class="text-xl font-bold text-gray-900">@yield('page-title', 'Dashboard')</h1>
-                <p class="text-sm text-gray-500 mt-0.5">@yield('page-subtitle', 'Selamat datang kembali, ' . auth()->user()->name)</p>
+        <header class="bg-white border-b border-gray-200 px-4 sm:px-8 py-4 flex items-center justify-between flex-shrink-0 sticky top-0 z-20">
+            <div class="flex items-center gap-3 sm:gap-4">
+                <button id="sidebarToggle" class="lg:hidden text-gray-500 hover:text-[#4A0404] focus:outline-none p-1 -ml-1 rounded-md">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold text-gray-900 leading-tight">@yield('page-title', 'Dashboard')</h1>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-0.5 hidden sm:block">@yield('page-subtitle', 'Selamat datang kembali, ' . auth()->user()->name)</p>
+                </div>
             </div>
             <div class="flex items-center gap-4">
                 @if(\App\Models\Booking::where('status', 'pending')->count() > 0)
@@ -117,11 +125,30 @@
         @endif
 
         <!-- Page Content -->
-        <main class="flex-1 p-8 overflow-y-auto">
+        <main class="flex-1 p-4 sm:p-8 overflow-y-auto">
             @yield('content')
         </main>
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('adminSidebar');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(toggleBtn) {
+            toggleBtn.addEventListener('click', toggleSidebar);
+        }
+        if(overlay) {
+            overlay.addEventListener('click', toggleSidebar);
+        }
+    });
+</script>
 </body>
 </html>
