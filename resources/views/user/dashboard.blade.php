@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
     <h1 class="text-3xl font-bold text-[#4A0404] mb-8 border-b pb-4">Dashboard Saya - Riwayat Penyewaan</h1>
 
     @if($bookings->count() > 0)
